@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <style>
+        /* 토스트 스타일 */
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            margin: auto;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+        }
+    </style>
+</head>
+<body>
+
+<!-- 토스트 메시지를 표시할 영역 -->
+<div id="toast" class="toast"></div>
+
+<!-- 버튼 클릭 시 토스트 메시지 표시 -->
+<button onclick="showToast()">Show Toast</button>
+
+<script>
+    // 토스트 표시 함수
+    function showToast() {
+        var toast = document.getElementById('toast');
+        toast.innerText = 'This is a toast message!';
+        toast.style.visibility = 'visible';
+
+        // 일정 시간이 지난 후 토스트 숨김
+        setTimeout(function() {
+            toast.style.visibility = 'hidden';
+        }, 3000); // 3000 밀리초(3초) 후에 숨김
+    }
+</script>
+
+</body>
+</html>
