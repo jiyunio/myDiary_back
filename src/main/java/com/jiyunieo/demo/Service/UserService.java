@@ -5,6 +5,8 @@ import com.jiyunieo.demo.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.SplittableRandom;
+
 @RequiredArgsConstructor
 @Service // 서비스 : 엔티티 처리 메소드
 public class UserService {
@@ -14,6 +16,15 @@ public class UserService {
         if (userRepository.existsByUserId(UserId)) {
             return true;
         } else return false;
+    }
+
+    public boolean checkBlank(String name, String email, String id, String pw, String check) {
+        if(name.isBlank() || email.isBlank() || id.isBlank() || pw.isBlank() || check.isBlank()){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     public void create_User(String name, String email, String id, String pw) { // 새로운 유저 만들기

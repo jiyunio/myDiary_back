@@ -19,9 +19,9 @@ public class SignupUser {
     @Column(name = "UserEmail")
     private String userEmail;
 
-    @Column(name = "UserId", length = 10)
+    @Column(name = "UserId", length = 13)
     private String userId;
 
-    @Column(name = "UserPw", length = 10)
+    @Column(name = "UserPw", length = 13)
     private String userPw;
 }
