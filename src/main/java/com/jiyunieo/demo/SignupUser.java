@@ -2,16 +2,13 @@ package com.jiyunieo.demo;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CollectionId;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.persistence.*;
 
 @Setter
 @Getter
 @Entity
-public class LoginUser {
-
+public class SignupUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -27,5 +24,4 @@ public class LoginUser {
 
     @Column(name = "UserPw", length = 10)
     private String userPw;
-
 }
