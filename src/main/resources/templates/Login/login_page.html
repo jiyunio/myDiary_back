@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>login_page</title>
+</head>
+<body>
+<form th:action="@{/login}" method="post">
+    <h2>로그인</h2>
+    <div>
+        <input type="text" id="loginId" name="loginId" placeholder="아이디">
+        <p style="color: red" th:text="${error_loginId}"></p>
+    </div>
+
+    <div>
+        <input type="password" id="loginPw" name="loginPw" placeholder="비밀번호">
+        <p style="color: red" th:text="${error_loginPw}"></p>
+    </div>
+    <button type="button" onclick="location.href='/'">취소</button>
+    <button type="submit">sign in</button>
+</form>
+
+</body>
+</html>

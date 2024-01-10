@@ -1,4 +1,4 @@
-package com.jiyunieo.demo;
+package com.jiyunieo.demo.Domain;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,15 +13,15 @@ public class SignupUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "UserName", length = 13)
+    @Column(name = "userName", length = 13)
     private String userName;
 
-    @Column(name = "UserEmail")
+    @Column(name = "userEmail")
     private String userEmail;
 
-    @Column(name = "UserId", length = 13)
+    @Column(name = "userId", length = 13)
     private String userId;
 
-    @Column(name = "UserPw", length = 13)
+    @Column(name = "userPw", length = 13)
     private String userPw;
 }
