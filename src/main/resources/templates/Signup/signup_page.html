@@ -3,12 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Success</title>
+    <style>
+        body {
+            background-color: #F5FAFB;
+        }
+    </style>
 </head>
 <body>
 <div layout:fragment="content" class="container">
     <h2 style="text-align: center; margin-bottom: 5px; margin-top: 100px;" class="my-3 border-bottom pb-2">회원가입</h2>
     <form style="border: 2px; border-color:#000; padding: 20px; alignment-baseline: center" target="_top"
-          autocapitalize="off" th:action="@{/signup}" method="post" th:object="${signupDto}">
+          autocapitalize="off" th:action="@{/signup}" method="post" th:object="${memberDto}">
         <div style="text-align: center">
             <input style="margin-top: 5px; width: 200px; height: 30px;" type="text" id="userName" name="userName"
                    placeholder="이름" value="" maxlength="10" autocapitalize="off" th:field="*{userName}" >

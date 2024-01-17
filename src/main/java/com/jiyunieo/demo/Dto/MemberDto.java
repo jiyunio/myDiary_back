@@ -5,7 +5,7 @@ import lombok.Data;
 import javax.validation.constraints.*;
 
 @Data
-public class SignupDto {
+public class MemberDto {
 
     private Integer id;
 
@@ -22,7 +22,7 @@ public class SignupDto {
     private String userId;
 
     @NotBlank(message = "비밀번호를 작성해주세요.")
-    @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{6,13}", message = "비밀번호 : 공백을 포함하지 않고 6~13자의 영문 대/소문자, 숫자, 특수문자를 모두 사용해주세요.")
+    //@Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$)", message = "비밀번호 : 공백을 포함하지 않고 6~13자의 영문 대/소문자, 숫자, 특수문자를 모두 사용해주세요.")
     // 유효성 검사
     private String userPw;
 

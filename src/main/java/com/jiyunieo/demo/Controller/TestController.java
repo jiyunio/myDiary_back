@@ -1,14 +1,14 @@
 package com.jiyunieo.demo.Controller;
 
-import com.jiyunieo.demo.Dto.LoginDto;
-import com.jiyunieo.demo.Dto.SignupDto;
-import com.jiyunieo.demo.Service.LoginService;
+import com.jiyunieo.demo.Dto.MemberDto;
 import com.jiyunieo.demo.Service.SignupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
 import java.util.Map;
@@ -21,7 +21,7 @@ public class TestController {
     //PostMapping : 주로 노출되면 안되는 데이터를 저장할 때 사용(url에 데이터를 노출하지 않고 요청)
 
     private final SignupService signupService; // 서비스 이용을 위해 가져옴
-    private final LoginService loginService;
+    //private final LoginService loginService;
 
     // 메인페이지
     @GetMapping("/")
@@ -31,22 +31,25 @@ public class TestController {
 
     //회원가입
     @GetMapping("/signup")
-    public String signup(SignupDto signupDto) {
+    public String signup(MemberDto memberDto) {
         return "Signup/signup_page";
     }
 
     @PostMapping("/signup") // html에서 submit하면 발동
-    public String signup(Model model, @ModelAttribute @Valid SignupDto signupDto, BindingResult bindingResult) {
+    public String signup(Model model, @ModelAttribute @Valid MemberDto memberDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) { // 오류 발생
+            model.addAttribute("signupDto", memberDto);
+
             Map<String, String> validMap = signupService.valid_signup(bindingResult);
             for (String validName : validMap.keySet()) {
                 model.addAttribute(validName, validMap.get(validName));
+                System.out.println(memberDto.getUserPw());
             }
             return "Signup/signup_page";
         }
-        if(Objects.equals(signupDto.getUserPw(), signupDto.getCheckPw())){ // 비밀번호 비교
-            if(signupService.create_signupUser(signupDto)){ // 로그인 성공
-                model.addAttribute("name", signupDto.getUserName());
+        if(Objects.equals(memberDto.getUserPw(), memberDto.getCheckPw())){ // 비밀번호 비교
+            if(signupService.create_signupUser(memberDto)){ // 로그인 성공
+                model.addAttribute("name", memberDto.getUserName());
                 return "Main/main_page";
             }
             else{
@@ -63,7 +66,7 @@ public class TestController {
     public String login(){
         return "Login/login_page";
     }
-
+/*
     @PostMapping("/login")
     public String login(Model model, @ModelAttribute @Valid LoginDto loginDto, BindingResult bindingResult){
         if(bindingResult.hasErrors()){ // 유효성 검사 실패
@@ -82,5 +85,5 @@ public class TestController {
                 return "Login/login_page";
             }
         }
-    }
+    }*/
 }
