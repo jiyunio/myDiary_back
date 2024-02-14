@@ -24,4 +24,5 @@ public class Member {
 
     @Column(name = "userPw")
     private String userPw;
+
 }

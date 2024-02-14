@@ -1,89 +1,49 @@
 package com.jiyunieo.demo.Controller;
 
+import com.jiyunieo.demo.Dto.DiaryDto;
 import com.jiyunieo.demo.Dto.MemberDto;
-import com.jiyunieo.demo.Service.SignupService;
+import com.jiyunieo.demo.Dto.ResponseDto;
+import com.jiyunieo.demo.Service.DiaryService;
+import com.jiyunieo.demo.Service.MemberService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.Map;
-import java.util.Objects;
 
+@Slf4j
 @RequiredArgsConstructor
-@Controller
+@RestController
 public class TestController {
-    //GetMapping : 주로 조회할 때 사용(url에 데이터를 포함시켜 요청)
-    //PostMapping : 주로 노출되면 안되는 데이터를 저장할 때 사용(url에 데이터를 노출하지 않고 요청)
-
-    private final SignupService signupService; // 서비스 이용을 위해 가져옴
-    //private final LoginService loginService;
-
-    // 메인페이지
-    @GetMapping("/")
-    public String diaryMain(){
-        return "Main/main_page";
-    }
-
-    //회원가입
-    @GetMapping("/signup")
-    public String signup(MemberDto memberDto) {
-        return "Signup/signup_page";
-    }
-
-    @PostMapping("/signup") // html에서 submit하면 발동
-    public String signup(Model model, @ModelAttribute @Valid MemberDto memberDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) { // 오류 발생
-            model.addAttribute("signupDto", memberDto);
-
-            Map<String, String> validMap = signupService.valid_signup(bindingResult);
-            for (String validName : validMap.keySet()) {
-                model.addAttribute(validName, validMap.get(validName));
-                System.out.println(memberDto.getUserPw());
-            }
-            return "Signup/signup_page";
-        }
-        if(Objects.equals(memberDto.getUserPw(), memberDto.getCheckPw())){ // 비밀번호 비교
-            if(signupService.create_signupUser(memberDto)){ // 로그인 성공
-                model.addAttribute("name", memberDto.getUserName());
-                return "Main/main_page";
-            }
-            else{
-                model.addAttribute("error_userId", "이미 존재하는 아이디입니다.");
-                return "Signup/signup_page";
-            }
-        }
-        model.addAttribute("error_checkPw", "비밀번호가 일치하지 않습니다.");
-        return "Signup/signup_page";
+    private final MemberService memberService; // 서비스 이용을 위해 가져옴
+    private final DiaryService diaryService;
+    // 회원가입
+    @PostMapping("/signup")
+    @ApiOperation(value = "회원가입", notes = "회원가입합시다.")
+    public ResponseEntity<ResponseDto> signup(@Valid @RequestBody MemberDto memberDto) {
+        Integer id = memberService.create_signupUser(memberDto);
+        return ResponseEntity.ok(new ResponseDto(id, "회원가입 성공"));
     }
 
     //로그인
-    @GetMapping("/login")
-    public String login(){
-        return "Login/login_page";
-    }
-/*
     @PostMapping("/login")
-    public String login(Model model, @ModelAttribute @Valid LoginDto loginDto, BindingResult bindingResult){
-        if(bindingResult.hasErrors()){ // 유효성 검사 실패
-            Map<String, String> validMap = loginService.valid_signin(bindingResult);
-            for(String validName : validMap.keySet()){
-                model.addAttribute(validName, validMap.get(validName));
-            }
-            return "Login/login_page";
-        }
-        else { // 검사 성공
-            if (loginService.signin(loginDto)) { // 로그인 성공
-               model.addAttribute("name", loginService.getUserName(loginDto));
-               return "Main/main_page";
-            } else { // 로그인 실패
-                model.addAttribute("error_loginPw", "아이디 또는 비밀번호를 확인해주세요");
-                return "Login/login_page";
-            }
-        }
-    }*/
+    @ApiOperation(value = "로그인", notes = "로그인합시다.")
+    public ResponseEntity<ResponseDto> login(@Valid @RequestParam("loginId") String loginId, @RequestParam("loginPw") String loginPw){
+        Integer id = memberService.login(loginId, loginPw);
+        log.warn("로그인 성공");
+        return ResponseEntity.ok(new ResponseDto(id, "로그인 성공"));
+    }
+
+    //다이어리
+    @PostMapping("/diary")
+    @ApiOperation(value = "다이어리", notes = "내용, 요소 좌표 저장")
+    public ResponseEntity<ResponseDto> diary(@Valid @RequestBody DiaryDto diaryDto){
+        Integer id = diaryService.crete(diaryDto);
+        return ResponseEntity.ok(new ResponseDto(id, "다이어리 변경 성공"));
+    }
 }

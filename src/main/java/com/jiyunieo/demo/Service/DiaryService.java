@@ -10,9 +10,16 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DiaryService {
     private final DiaryRepository diaryRepository;
-    public void save(DiaryDto diaryDto){
+
+    public Integer crete(DiaryDto diaryDto) {
         Diary diary = new Diary();
-        diary.setContent(diaryDto.getContent());
-        this.diaryRepository.save(diary);
+
+        diary.setContents(diaryDto.getContents());
+        diary.setX(diary.getX());
+        diary.setY(diary.getY());
+        return diaryRepository.save(diary).getId();
+    }
+
+    public void delete(DiaryDto diaryDto) {
     }
 }
