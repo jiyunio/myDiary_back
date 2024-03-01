@@ -1,7 +1,9 @@
 package com.jiyunieo.demo.Service;
 
 import com.jiyunieo.demo.Domain.Member;
+import com.jiyunieo.demo.Dto.LoginDto;
 import com.jiyunieo.demo.Dto.MemberDto;
+import com.jiyunieo.demo.Dto.MemberUpdateDto;
 import com.jiyunieo.demo.Exception.CustomErrorCode;
 import com.jiyunieo.demo.Exception.CustomException;
 import com.jiyunieo.demo.Repository.MemberRepository;
@@ -22,7 +24,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Integer create_signupUser(MemberDto memberDto) {
+    public Integer create(MemberDto memberDto) {
         if (memberRepository.existsByUserId(memberDto.getUserId())) {// 아이디 중복 검사
             throw new CustomException(HttpStatus.BAD_REQUEST, CustomErrorCode.USER_ID_ERROR);
         }
@@ -42,14 +44,34 @@ public class MemberService {
     }
 
     @Transactional
-    public Integer login(String loginId, String loginPw) {
-        if (!memberRepository.existsByUserId(loginId)) { // 아이디 존재 여부
+    public void update(Integer id, MemberUpdateDto updateDto) {
+        Member member = memberRepository.findById(id).get();
+        if (!passwordEncoder.matches(updateDto.getUserPw(), member.getUserPw())) { // 현재 비밀번호 틀림
+            throw new CustomException(HttpStatus.BAD_REQUEST, CustomErrorCode.INVALID_PW);
+        } else {
+            if (!updateDto.getChangePw().equals(updateDto.getCheckChangePw())) { // 비밀번호 체크
+                throw new CustomException(HttpStatus.BAD_REQUEST, CustomErrorCode.CHECK_PW_ERROR);
+            }
+            // 정보 수정
+            member.updatePw(passwordEncoder.encode(updateDto.getChangePw()));
+            memberRepository.save(member);
+        }
+    }
+
+    public void delete(Integer id) {
+        memberRepository.deleteById(id);
+        log.warn("회원 삭제 성공");
+    }
+
+    @Transactional
+    public Integer login(LoginDto loginDto) {
+        if (!memberRepository.existsByUserId(loginDto.getLoginId())) { // 아이디 존재 여부
             log.warn("아이디 존재 X");
             throw new CustomException(HttpStatus.BAD_REQUEST, CustomErrorCode.NOT_USER_ID);
         }
 
-        Member member = memberRepository.findByUserId(loginId).get();
-        if (!passwordEncoder.matches(loginPw, member.getUserPw())) { // 비밀번호 복호화 비교
+        Member member = memberRepository.findByUserId(loginDto.getLoginId()).get();
+        if (!passwordEncoder.matches(loginDto.getLoginPw(), member.getUserPw())) { // 비밀번호 복호화 비교
             log.warn("비밀번호 틀림");
             throw new CustomException(HttpStatus.BAD_REQUEST, CustomErrorCode.NOT_MATCH_PW);
         } else {

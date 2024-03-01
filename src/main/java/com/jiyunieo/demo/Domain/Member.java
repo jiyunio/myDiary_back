@@ -25,4 +25,8 @@ public class Member {
     @Column(name = "userPw")
     private String userPw;
 
+    public void updatePw(String userPw) {
+        this.userPw = userPw;
+    }
+
 }
